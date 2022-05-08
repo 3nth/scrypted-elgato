@@ -7,14 +7,12 @@ export class KeyLight {
     info?: KeyLightInfo;
     options?: KeyLightOptions;
 
-    constructor(ip: string, port: number)
-    {
+    constructor(ip: string, port: number) {
         this.ip = ip;
         this.port = port;
     }
 
-    static async build(ip: string, port: number)
-    {
+    static async build(ip: string, port: number) {
         const newLight = new KeyLight(ip, port);
         await newLight.refresh();
         return newLight;
@@ -49,7 +47,7 @@ export class KeyLight {
 
     async turnOn() {
         const { data } = await axios.put<KeyLightOptions>(
-            `http://${this.ip}:${this.port}/elgato/lights`, 
+            `http://${this.ip}:${this.port}/elgato/lights`,
             {
                 "numberOfLights": 1,
                 "lights": [
@@ -64,7 +62,7 @@ export class KeyLight {
 
     async turnOff() {
         const { data } = await axios.put<KeyLightOptions>(
-            `http://${this.ip}:${this.port}/elgato/lights`, 
+            `http://${this.ip}:${this.port}/elgato/lights`,
             {
                 "numberOfLights": 1,
                 "lights": [
@@ -79,7 +77,7 @@ export class KeyLight {
 
     async setBrightness(level: number) {
         const { data } = await axios.put<KeyLightOptions>(
-            `http://${this.ip}:${this.port}/elgato/lights`, 
+            `http://${this.ip}:${this.port}/elgato/lights`,
             {
                 "numberOfLights": 1,
                 "lights": [
@@ -94,7 +92,7 @@ export class KeyLight {
 
     async setColorTemperature(temperature: number) {
         const { data } = await axios.put<KeyLightOptions>(
-            `http://${this.ip}:${this.port}/elgato/lights`, 
+            `http://${this.ip}:${this.port}/elgato/lights`,
             {
                 "numberOfLights": 1,
                 "lights": [
