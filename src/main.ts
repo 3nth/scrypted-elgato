@@ -1,14 +1,14 @@
 
 import Bonjour from "bonjour-service";
 import { KeyLight } from './lights';
-import sdk, { Device, ScryptedDeviceBase, OnOff, Brightness, ColorSettingTemperature, Refresh, ScryptedDeviceType, DeviceProvider, ScryptedNativeId } from '@scrypted/sdk';
+import sdk, { ScryptedDeviceBase, OnOff, Brightness, ColorSettingTemperature, Refresh, ScryptedDeviceType, DeviceProvider, ScryptedNativeId } from '@scrypted/sdk';
 const { deviceManager } = sdk;
 
 class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, ColorSettingTemperature, Refresh {
   light: KeyLight;
 
-  constructor(light: KeyLight) {
-    super(light.info.serialNumber);
+  constructor(nativeId: ScryptedNativeId, light: KeyLight) {
+    super(nativeId);
     this.light = light;
     this.updateState();
   }
@@ -66,7 +66,7 @@ class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, Colo
 }
 
 class ElgatoController extends ScryptedDeviceBase implements DeviceProvider {
-  lights: any = {};
+  lights = new Map<ScryptedNativeId, ElgatoDevice>();
 
   constructor() {
     super();
@@ -85,9 +85,7 @@ class ElgatoController extends ScryptedDeviceBase implements DeviceProvider {
       type: ScryptedDeviceType.Light,
     };
     await deviceManager.onDeviceDiscovered(info);
-
-    const device = new ElgatoDevice(light);
-    this.lights[device.nativeId] = device;
+    this.lights[info.nativeId] = new ElgatoDevice(info.nativeId, light);
   }
 
   async discoverDevices(duration: number) {
