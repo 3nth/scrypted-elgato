@@ -7,14 +7,11 @@ const { deviceManager, log } = sdk;
 class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, ColorSettingTemperature, Refresh {
   light: KeyLight;
   device: Device;
-  refresher: Function;
 
   constructor(light: KeyLight, device: Device) {
     super(device.nativeId);
     this.light = light;
     this.device = device;
-
-    this.refresher = (err) => this.refresh();
 
     // schedule a refresh. not doing it immediately, to allow the device to be reported
     // by sync first.
