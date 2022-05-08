@@ -34,7 +34,7 @@ class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, Colo
     let kelvin = Math.round(1000000 * Math.pow(temperature, -1))
     if(kelvin > 7000) kelvin = 7000;
     if(kelvin < 2900) kelvin = 2900;
-    this.temperature = kelvin;
+    this.colorTemperature = kelvin;
   }
 
   async getRefreshFrequency() {
