@@ -2,7 +2,7 @@
 import Bonjour from "bonjour-service";
 import { KeyLight } from './lights';
 import sdk, { Device, ScryptedDeviceBase, OnOff, Brightness, ColorSettingTemperature, Refresh, ScryptedDeviceType, DeviceProvider } from '@scrypted/sdk';
-const { deviceManager, log } = sdk;
+const { deviceManager } = sdk;
 
 class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, ColorSettingTemperature, Refresh {
   light: KeyLight;
@@ -73,10 +73,11 @@ class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, Colo
 
 }
 
-class ElgatoController implements DeviceProvider {
+class ElgatoController extends ScryptedDeviceBase implements DeviceProvider {
   lights: any = {};
 
   constructor() {
+    super();
     this.discoverDevices(30);
   }
 
@@ -85,6 +86,8 @@ class ElgatoController implements DeviceProvider {
   }
 
   async newLight(light: KeyLight) {
+    this.console.log(`Found Elgato device: ${light.name}`)
+
     await light.refresh();
     var info = {
       name: light.info.displayName,
@@ -99,15 +102,15 @@ class ElgatoController implements DeviceProvider {
 
   async discoverDevices(duration: number) {
     const browser = new Bonjour().find({ type: 'elg' });
-    log.i(`discoverDevices...`)
+    this.console.log(`Discovering Elgato devices ...`)
     browser.on('up', service => {
-        log.i(`found light: ${service.name}`)
         let newLight = new KeyLight(service['referer'].address, service.port, service.name);
         this.newLight(newLight);
     });
     browser.start();
     setTimeout(() => {
       browser.stop();
+      this.console.log(`Elgato device discovery stopped.`)
     }, duration * 1000);
 
   }
