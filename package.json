@@ -1,6 +1,6 @@
 {
    "name": "scrypted-elgato",
-   "version": "0.1.1",
+   "version": "0.1.2",
    "description": "An Elgato plugin for Scrypted",
    "author": "Derek Flenniken",
    "license": "Apache",
