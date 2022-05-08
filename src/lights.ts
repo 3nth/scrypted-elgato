@@ -17,23 +17,29 @@ export class KeyLight {
     }
 
     async refresh() {
+        await this.getOptions();
         await this.getSettings();
         await this.getInfo();
-        await this.getOptions();
     }
 
     async getSettings() {
-        const { data, status } = await axios.get<KeyLightSettings>(`http://${this.ip}:${this.port}/elgato/lights/settings`);
+        const { data } = await axios.get<KeyLightSettings>(
+            `http://${this.ip}:${this.port}/elgato/lights/settings`
+        );
         this.settings = data;
     }
 
     async getOptions() {
-        const { data, status } = await axios.get<KeyLightOptions>(`http://${this.ip}:${this.port}/elgato/lights`);
+        const { data } = await axios.get<KeyLightOptions>(
+            `http://${this.ip}:${this.port}/elgato/lights`
+        );
         this.options = data;
     }
 
     async getInfo() {
-        const { data, status } = await axios.get<KeyLightInfo>(`http://${this.ip}:${this.port}/elgato/accessory-info`);
+        const { data } = await axios.get<KeyLightInfo>(
+            `http://${this.ip}:${this.port}/elgato/accessory-info`
+        );
         this.info = data;
     }
 
