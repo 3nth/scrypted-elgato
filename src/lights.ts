@@ -3,17 +3,21 @@ import axios from 'axios';
 export class KeyLight {
     ip: string;
     port: number;
-    name: string;
     settings?: KeyLightSettings;
     info?: KeyLightInfo;
     options?: KeyLightOptions;
 
-    constructor(ip: string, port: number, name: string)
+    constructor(ip: string, port: number)
     {
         this.ip = ip;
         this.port = port;
-        this.name = name;
-        setImmediate(() => this.refresh());
+    }
+
+    static async build(ip: string, port: number)
+    {
+        const newLight = new KeyLight(ip, port);
+        await newLight.refresh();
+        return newLight;
     }
 
     async refresh() {

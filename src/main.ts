@@ -1,23 +1,17 @@
 
 import Bonjour from "bonjour-service";
 import { KeyLight } from './lights';
-import sdk, { Device, ScryptedDeviceBase, OnOff, Brightness, ColorSettingTemperature, Refresh, ScryptedDeviceType, DeviceProvider } from '@scrypted/sdk';
+import sdk, { Device, ScryptedDeviceBase, OnOff, Brightness, ColorSettingTemperature, Refresh, ScryptedDeviceType, DeviceProvider, ScryptedNativeId } from '@scrypted/sdk';
 const { deviceManager } = sdk;
 
 class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, ColorSettingTemperature, Refresh {
   light: KeyLight;
-  device: Device;
 
-  constructor(light: KeyLight, device: Device) {
-    super(device.nativeId);
+  constructor(light: KeyLight) {
+    super(light.info.serialNumber);
     this.light = light;
-    this.device = device;
-
-    // schedule a refresh. not doing it immediately, to allow the device to be reported
-    // by sync first.
-    setImmediate(() => this.refresh());
+    this.updateState();
   }
-
 
   async refresh() {
     await this.light.refresh();
@@ -25,9 +19,9 @@ class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, Colo
   }
 
   updateState() {
-    this.on = !!this.light.options.lights[0].on;
-    this.brightness = this.light.options.lights[0].brightness;
-    let temperature = this.light.options.lights[0].temperature;
+    this.on = !!this.light.options?.lights[0].on;
+    this.brightness = this.light.options?.lights[0].brightness;
+    let temperature = this.light.options?.lights[0].temperature;
     let kelvin = Math.round( ( 1000000 * Math.pow(temperature, -1) ) / 50 ) * 50
     if(kelvin > 7000) kelvin = 7000;
     if(kelvin < 2900) kelvin = 2900;
@@ -37,8 +31,6 @@ class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, Colo
   async getRefreshFrequency() {
     return 5;
   }
-
-  // setters
 
   async turnOn() {
     await this.light.turnOn();
@@ -81,31 +73,30 @@ class ElgatoController extends ScryptedDeviceBase implements DeviceProvider {
     this.discoverDevices(30);
   }
 
-  getDevice(id) {
-    return this.lights[id];
+  getDevice(nativeId: ScryptedNativeId) {
+    return this.lights[nativeId];
   }
 
-  async newLight(light: KeyLight) {
-    this.console.log(`Found Elgato device: ${light.name}`)
-
-    await light.refresh();
+  async addDevice(light: KeyLight) {
     var info = {
       name: light.info.displayName,
       nativeId: light.info.serialNumber,
       interfaces: ['OnOff', 'Brightness', 'ColorSettingTemperature', 'Refresh'],
       type: ScryptedDeviceType.Light,
     };
-
     await deviceManager.onDeviceDiscovered(info);
-    this.lights[light.info.serialNumber] = new ElgatoDevice(light, info);
+
+    const device = new ElgatoDevice(light);
+    this.lights[device.nativeId] = device;
   }
 
   async discoverDevices(duration: number) {
     const browser = new Bonjour().find({ type: 'elg' });
     this.console.log(`Discovering Elgato devices ...`)
-    browser.on('up', service => {
-        let newLight = new KeyLight(service['referer'].address, service.port, service.name);
-        this.newLight(newLight);
+    browser.on('up', async service => {
+      this.console.log(`Found Elgato device: ${service.name}`)
+      const newLight = await KeyLight.build(service['referer'].address, service.port);
+      this.addDevice(newLight);
     });
     browser.start();
     setTimeout(() => {
