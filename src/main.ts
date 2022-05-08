@@ -90,7 +90,7 @@ class ElgatoController extends ScryptedDeviceBase implements DeviceProvider {
 
   async discoverDevices(duration: number) {
     const browser = new Bonjour().find({ type: 'elg' });
-    this.console.log(`Discovering Elgato devices ...`)
+    this.console.log('Elgato device discovery started ...')
     browser.on('up', async service => {
       this.console.log(`Found Elgato device: ${service.name}`)
       const newLight = await KeyLight.build(service['referer'].address, service.port);
@@ -99,7 +99,7 @@ class ElgatoController extends ScryptedDeviceBase implements DeviceProvider {
     browser.start();
     setTimeout(() => {
       browser.stop();
-      this.console.log(`Elgato device discovery stopped.`)
+      this.console.log('Elgato device discovery stopped.')
     }, duration * 1000);
 
   }
