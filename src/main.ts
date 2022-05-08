@@ -99,6 +99,13 @@ class ElgatoController extends ScryptedDeviceBase implements DeviceProvider {
     this.console.log('Elgato device discovery started ...')
     browser.on('up', service => {
       this.console.log(`Found Elgato device: ${service.name}`)
+      function replacer(key, value) {
+        if (key === 'rawTxt') {
+          return undefined;
+        }
+        return value;
+      }
+      this.console.log(`${JSON.stringify(service, replacer, 2)}`)
       this.addDevice(service);
     });
     browser.start();
