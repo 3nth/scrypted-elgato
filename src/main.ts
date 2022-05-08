@@ -1,7 +1,7 @@
 
 import Bonjour from "bonjour-service";
 import { KeyLight } from './lights';
-import sdk, { ScryptedDeviceBase, OnOff, Brightness, ColorSettingTemperature, Refresh, ScryptedDeviceType, DeviceProvider, ScryptedNativeId } from '@scrypted/sdk';
+import sdk, { ScryptedDeviceBase, OnOff, Brightness, ColorSettingTemperature, Refresh, ScryptedDeviceType, DeviceProvider, ScryptedNativeId, ScryptedInterface } from '@scrypted/sdk';
 const { deviceManager } = sdk;
 
 class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, ColorSettingTemperature, Refresh {
@@ -82,7 +82,12 @@ class ElgatoController extends ScryptedDeviceBase implements DeviceProvider {
     var info = {
       name: light.info.displayName,
       nativeId: light.info.serialNumber,
-      interfaces: ['OnOff', 'Brightness', 'ColorSettingTemperature', 'Refresh'],
+      interfaces: [
+        ScryptedInterface.OnOff, 
+        ScryptedInterface.Brightness, 
+        ScryptedInterface.ColorSettingTemperature, 
+        ScryptedInterface.Refresh
+      ],
       type: ScryptedDeviceType.Light,
     };
     await deviceManager.onDeviceDiscovered(info);
