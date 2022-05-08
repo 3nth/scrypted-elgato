@@ -32,6 +32,8 @@ class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, Colo
     this.brightness = this.light.options.lights[0].brightness;
     let temperature = this.light.options.lights[0].temperature;
     let kelvin = Math.round(1000000 * Math.pow(temperature, -1))
+    if(kelvin > 7000) kelvin = 7000;
+    if(kelvin < 2900) kelvin = 2900;
     this.temperature = kelvin;
   }
 
@@ -58,8 +60,8 @@ class ElgatoDevice extends ScryptedDeviceBase implements OnOff, Brightness, Colo
 
   async setColorTemperature(kelvin: number) {
     let temperature = Math.round(987007 * Math.pow(kelvin, -0.999));
-    if(temperature > 7000) temperature = 7000;
-    if(temperature < 2900) temperature = 2900;
+    if(temperature > 344) temperature = 344;
+    if(temperature < 143) temperature = 143;
     await this.light.setColorTemperature(temperature)
     this.updateState();
   }

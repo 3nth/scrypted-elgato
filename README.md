@@ -1,6 +1,6 @@
 # An Elgato plugin for Scrypted
 
-Supports Elgato Key Light & KeyLight Air 
+Supports Elgato Key Light & Key Light Air 
 
 ## Development
 
