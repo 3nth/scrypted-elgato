@@ -1,8 +1,8 @@
 {
-   "name": "@scrypted/elgato",
+   "name": "scrypted-elgato",
    "version": "0.1.0",
-   "description": "An Elgato KeyLight plugin for Scrypted",
-   "author": "Scrypted",
+   "description": "An Elgato plugin for Scrypted",
+   "author": "Derek Flenniken",
    "license": "Apache",
    "scripts": {
       "prepublishOnly": "NODE_ENV=production scrypted-webpack",
@@ -29,8 +29,7 @@
       ]
    },
    "devDependencies": {
-      "@scrypted/sdk": "file:../../sdk",
-      "@types/axios": "^0.14.0",
+      "@scrypted/sdk": "^0.0.195",
       "@types/node": "^16.7.1"
    },
    "dependencies": {
