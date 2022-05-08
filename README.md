@@ -1,15 +1,19 @@
-# An Elgato KeyLight plugin
+# An Elgato plugin for Scrypted
 
-## npm commands
+Supports Elgato Key Light & KeyLight Air 
+
+## Development
+
+You need a running Scrypted server and should first login to it using:
+
+    npx scrypted login [ip]
+
+### npm commands
  * npm run scrypted-webpack
  * npm run scrypted-deploy <ipaddress>
  * npm run scrypted-debug <ipaddress>
 
-## scrypted distribution via npm
- 1. Ensure package.json is set up properly for publishing on npm.
- 2. npm publish
+### Visual Studio Code configuration
 
-## Visual Studio Code configuration
-
-* If using a remote server, edit [.vscode/settings.json](blob/master/.vscode/settings.json) to specify the IP Address of the Scrypted server.
+* If using a remote server, edit [.vscode/settings.json](.vscode/settings.json) to specify the IP Address of the Scrypted server.
 * Launch Scrypted Debugger from the launch menu.
