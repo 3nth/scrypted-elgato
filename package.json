@@ -30,7 +30,8 @@
    },
    "devDependencies": {
       "@scrypted/sdk": "^0.0.195",
-      "@types/node": "^16.7.1"
+      "@types/node": "^16.7.1",
+      "webpack-bundle-analyzer": "^4.5.0"
    },
    "dependencies": {
       "axios": "^0.27.2",
