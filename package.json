@@ -34,7 +34,7 @@
       "webpack-bundle-analyzer": "^4.5.0"
    },
    "dependencies": {
-      "axios": "^0.27.2",
-      "bonjour-service": "^1.0.12"
+      "axios": "^1.3.2",
+      "bonjour-service": "^1.1.0"
    }
 }
